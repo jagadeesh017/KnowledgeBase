@@ -3,6 +3,7 @@ from knowledge_platform.rag.schemas import (
     LoadedDocument,
     PageContent,
     SearchResult,
+    Source,
 )
 
-__all__ = ["DocumentChunk", "LoadedDocument", "PageContent", "SearchResult"]
+__all__ = ["DocumentChunk", "LoadedDocument", "PageContent", "SearchResult", "Source"]

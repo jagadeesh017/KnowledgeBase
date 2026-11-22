@@ -30,7 +30,7 @@ class ChromaVectorStore(VectorStore):
             return
 
         target = self.client.get_or_create_collection(name=collection)
-        target.add(
+        target.upsert(
             ids=[chunk.chunk_id for chunk in chunks],
             embeddings=[list(vector) for vector in vectors],
             documents=[chunk.content for chunk in chunks],

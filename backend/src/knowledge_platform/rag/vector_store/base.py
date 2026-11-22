@@ -11,7 +11,7 @@ class VectorStore(ABC):
         chunks: list[DocumentChunk],
         vectors: list[list[float]],
     ) -> None:
-        """Store chunks and their vectors together, scoped to a collection."""
+        """Store chunks and vectors in a collection; existing chunk IDs are replaced."""
 
     @abstractmethod
     def query(

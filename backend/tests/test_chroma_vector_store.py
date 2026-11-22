@@ -105,6 +105,17 @@ def test_collections_are_isolated(store: ChromaVectorStore) -> None:
     assert [result.document_id for result in results] == ["doc_001"]
 
 
+def test_readding_chunk_id_replaces_content(
+    store: ChromaVectorStore, collection_name: str
+) -> None:
+    store.add(collection_name, [make_chunk("chunk_001", "doc_001", "old text")], [[1.0, 0.0]])
+    store.add(collection_name, [make_chunk("chunk_001", "doc_001", "new text")], [[1.0, 0.0]])
+
+    results = store.query(collection_name, [1.0, 0.0])
+
+    assert [result.content for result in results] == ["new text"]
+
+
 def test_mismatched_lengths_raise(
     store: ChromaVectorStore, collection_name: str
 ) -> None:
