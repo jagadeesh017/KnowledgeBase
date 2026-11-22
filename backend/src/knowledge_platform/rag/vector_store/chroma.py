@@ -1,0 +1,92 @@
+from pathlib import Path
+
+import chromadb
+from chromadb.api import ClientAPI
+from chromadb.errors import NotFoundError
+
+from knowledge_platform.rag.schemas import DocumentChunk, SearchResult
+from knowledge_platform.rag.vector_store.base import VectorStore
+
+
+class ChromaVectorStore(VectorStore):
+    DEFAULT_PATH = "./chroma"
+
+    def __init__(
+        self,
+        path: str | Path = DEFAULT_PATH,
+        client: ClientAPI | None = None,
+    ) -> None:
+        self.client = client if client is not None else chromadb.PersistentClient(path=str(path))
+
+    def add(
+        self,
+        collection: str,
+        chunks: list[DocumentChunk],
+        vectors: list[list[float]],
+    ) -> None:
+        if len(chunks) != len(vectors):
+            raise ValueError("chunks and vectors must have the same length")
+        if not chunks:
+            return
+
+        target = self.client.get_or_create_collection(name=collection)
+        target.add(
+            ids=[chunk.chunk_id for chunk in chunks],
+            embeddings=[list(vector) for vector in vectors],
+            documents=[chunk.content for chunk in chunks],
+            metadatas=[self._metadata(chunk) for chunk in chunks],
+        )
+
+    def query(
+        self,
+        collection: str,
+        vector: list[float],
+        top_k: int = 5,
+        where: dict[str, object] | None = None,
+    ) -> list[SearchResult]:
+        try:
+            target = self.client.get_collection(name=collection)
+        except NotFoundError:
+            return []
+
+        result = target.query(
+            query_embeddings=[list(vector)],
+            n_results=top_k,
+            where=where,
+            include=["documents", "metadatas", "distances"],
+        )
+        return [
+            SearchResult(
+                chunk_id=chunk_id,
+                document_id=str(metadata["document_id"]),
+                content=content,
+                page_number=int(metadata["page_number"]),
+                distance=float(distance),
+                metadata={
+                    key: str(value)
+                    for key, value in metadata.items()
+                    if key not in {"document_id", "page_number"}
+                },
+            )
+            for chunk_id, content, metadata, distance in zip(
+                result["ids"][0],
+                result["documents"][0],
+                result["metadatas"][0],
+                result["distances"][0],
+            )
+        ]
+
+    def delete(self, collection: str, where: dict[str, object]) -> None:
+        try:
+            target = self.client.get_collection(name=collection)
+        except NotFoundError:
+            return
+        target.delete(where=where)
+
+    @staticmethod
+    def _metadata(chunk: DocumentChunk) -> dict[str, str | int]:
+        return {
+            "document_id": chunk.document_id,
+            "page_number": chunk.page_number,
+            **chunk.metadata,
+        }
