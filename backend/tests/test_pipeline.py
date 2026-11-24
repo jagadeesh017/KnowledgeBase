@@ -6,13 +6,13 @@ import pytest
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from knowledge_platform.exceptions import EmptyDocumentError, ServiceUnavailableError
-from knowledge_platform.rag.chunking import TextChunker
-from knowledge_platform.rag.embeddings import EmbeddingProvider
-from knowledge_platform.rag.generation import ChatMessage, ChatModelProvider
-from knowledge_platform.rag.pipeline import RAGPipeline
-from knowledge_platform.rag.schemas import DocumentChunk, SearchResult
-from knowledge_platform.rag.vector_store import ChromaVectorStore, VectorStore
+from exceptions import EmptyDocumentError, ServiceUnavailableError
+from rag.chunking import TextChunker
+from rag.embeddings import EmbeddingProvider
+from rag.generation import ChatMessage, ChatModelProvider
+from rag.pipeline import RAGPipeline
+from rag.schemas import DocumentChunk, SearchResult
+from rag.vector_store import ChromaVectorStore, VectorStore
 
 
 class FakeEmbeddings(EmbeddingProvider):

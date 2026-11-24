@@ -3,8 +3,8 @@ from uuid import uuid4
 import chromadb
 import pytest
 
-from knowledge_platform.rag.schemas import DocumentChunk
-from knowledge_platform.rag.vector_store import ChromaVectorStore, VectorStore
+from rag.schemas import DocumentChunk
+from rag.vector_store import ChromaVectorStore, VectorStore
 
 
 @pytest.fixture

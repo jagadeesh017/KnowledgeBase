@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from knowledge_platform.rag.embeddings import OllamaEmbeddings
+from rag.embeddings import OllamaEmbeddings
 
 pytestmark = pytest.mark.skipif(
     os.environ.get("RUN_LIVE_TESTS") != "1",

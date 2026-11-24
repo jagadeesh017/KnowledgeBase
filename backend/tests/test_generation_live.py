@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from knowledge_platform.rag.generation import ChatMessage, OllamaChatModel
+from rag.generation import ChatMessage, OllamaChatModel
 
 pytestmark = pytest.mark.skipif(
     os.environ.get("RUN_LIVE_TESTS") != "1",

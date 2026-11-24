@@ -4,10 +4,10 @@ from datetime import UTC, datetime
 from typing import cast
 from uuid import UUID, uuid4
 
-from knowledge_platform.jobs.repository import IngestionJob, IngestionJobRepository
-from knowledge_platform.jobs.worker import IngestionWorker
-from knowledge_platform.rag.pipeline import RAGPipeline
-from knowledge_platform.rag.schemas import DocumentChunk
+from jobs.repository import IngestionJob, IngestionJobRepository
+from jobs.worker import IngestionWorker
+from rag.pipeline import RAGPipeline
+from rag.schemas import DocumentChunk
 
 
 class FakeResult:

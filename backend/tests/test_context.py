@@ -1,5 +1,5 @@
-from knowledge_platform.rag.retrieval import build_context, build_sources
-from knowledge_platform.rag.schemas import SearchResult
+from rag.retrieval import build_context, build_sources
+from rag.schemas import SearchResult
 
 
 def make_result(

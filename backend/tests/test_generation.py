@@ -1,16 +1,16 @@
 import pytest
 
-from knowledge_platform.rag.embeddings import EmbeddingProvider
-from knowledge_platform.rag.generation import (
+from rag.embeddings import EmbeddingProvider
+from rag.generation import (
     ChatMessage,
     ChatModelProvider,
     OllamaChatModel,
     RAGAnswerer,
 )
-from knowledge_platform.rag.generation.prompts import SYSTEM_PROMPT, build_prompt
-from knowledge_platform.rag.retrieval import Retriever
-from knowledge_platform.rag.schemas import SearchResult
-from knowledge_platform.rag.vector_store import VectorStore
+from rag.generation.prompts import SYSTEM_PROMPT, build_prompt
+from rag.retrieval import Retriever
+from rag.schemas import SearchResult
+from rag.vector_store import VectorStore
 
 
 class FakeChatModel(ChatModelProvider):

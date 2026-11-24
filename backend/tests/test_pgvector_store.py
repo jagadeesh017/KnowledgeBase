@@ -6,8 +6,8 @@ from uuid import uuid4
 import pytest
 from pgvector import Vector
 
-from knowledge_platform.rag.schemas import DocumentChunk
-from knowledge_platform.rag.vector_store import PgVectorStore
+from rag.schemas import DocumentChunk
+from rag.vector_store import PgVectorStore
 
 
 class FakeCursor:

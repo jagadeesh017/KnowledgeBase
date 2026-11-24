@@ -17,4 +17,4 @@ ENV KP_CHROMA_PATH=/data/chroma \
 VOLUME ["/data/chroma"]
 EXPOSE 8000
 
-CMD ["uv", "run", "--frozen", "--no-dev", "python", "-m", "knowledge_platform"]
+CMD ["uv", "run", "--frozen", "--no-dev", "python", "-m", "uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]

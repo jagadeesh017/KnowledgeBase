@@ -1,8 +1,8 @@
 import pytest
 
-from knowledge_platform.rag.chunking import TextChunker
-from knowledge_platform.rag.embeddings import EmbeddingProvider
-from knowledge_platform.rag.schemas import LoadedDocument, PageContent
+from rag.chunking import TextChunker
+from rag.embeddings import EmbeddingProvider
+from rag.schemas import LoadedDocument, PageContent
 
 
 def make_document(

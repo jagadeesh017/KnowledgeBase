@@ -1,7 +1,7 @@
 import pytest
 
-from knowledge_platform.exceptions import DocumentParseError
-from knowledge_platform.rag.loaders import PDFLoader
+from exceptions import DocumentParseError
+from rag.loaders import PDFLoader
 
 
 def test_extracts_text_page_by_page(make_pdf) -> None:

@@ -2,10 +2,10 @@ from uuid import uuid4
 
 import chromadb
 
-from knowledge_platform.rag.embeddings import EmbeddingProvider
-from knowledge_platform.rag.retrieval import Retriever
-from knowledge_platform.rag.schemas import DocumentChunk, SearchResult
-from knowledge_platform.rag.vector_store import ChromaVectorStore, VectorStore
+from rag.embeddings import EmbeddingProvider
+from rag.retrieval import Retriever
+from rag.schemas import DocumentChunk, SearchResult
+from rag.vector_store import ChromaVectorStore, VectorStore
 
 
 class FakeEmbeddings(EmbeddingProvider):

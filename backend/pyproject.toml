@@ -20,14 +20,18 @@ dependencies = [
 ]
 
 [project.scripts]
-kp-worker = "knowledge_platform.jobs.worker_loop:main"
+kp-api = "api.app:run"
+kp-worker = "jobs.worker_loop:main"
 
 [build-system]
-requires = ["uv_build>=0.13.7,<0.14.0"]
-build-backend = "uv_build"
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
 
-[tool.uv.build-backend]
-module-name = "knowledge_platform"
+[tool.setuptools]
+py-modules = ["config", "container", "exceptions", "observability"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [dependency-groups]
 dev = [

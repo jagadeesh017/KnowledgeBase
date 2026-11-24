@@ -9,12 +9,12 @@ from fastapi.testclient import TestClient
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-from knowledge_platform.api.app import create_app
-from knowledge_platform.config import Settings
-from knowledge_platform.exceptions import ServiceUnavailableError
-from knowledge_platform.jobs.repository import IngestionJob, IngestionJobRepository
-from knowledge_platform.rag.pipeline import RAGPipeline
-from knowledge_platform.rag.schemas import DocumentChunk, RAGAnswer, Source
+from api.app import create_app
+from config import Settings
+from exceptions import ServiceUnavailableError
+from jobs.repository import IngestionJob, IngestionJobRepository
+from rag.pipeline import RAGPipeline
+from rag.schemas import DocumentChunk, RAGAnswer, Source
 
 
 class FakePipeline:

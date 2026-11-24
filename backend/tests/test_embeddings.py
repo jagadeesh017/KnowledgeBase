@@ -2,8 +2,8 @@ from collections.abc import Sequence
 
 import pytest
 
-from knowledge_platform.exceptions import ServiceUnavailableError
-from knowledge_platform.rag.embeddings import EmbeddingProvider, OllamaEmbeddings
+from exceptions import ServiceUnavailableError
+from rag.embeddings import EmbeddingProvider, OllamaEmbeddings
 
 
 class FakeClient:
