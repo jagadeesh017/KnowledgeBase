@@ -8,10 +8,19 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "chromadb>=1.5.9",
+    "fastapi>=0.165.0",
     "ollama>=0.6.3",
+    "pgvector>=0.4",
+    "psycopg[binary,pool]>=3.2",
     "pydantic>=2.14.4",
+    "pydantic-settings>=2.16.3",
     "pypdf>=7.1.1",
+    "python-multipart>=0.0.34",
+    "uvicorn[standard]>=0.54.0",
 ]
+
+[project.scripts]
+kp-worker = "knowledge_platform.jobs.worker_loop:main"
 
 [build-system]
 requires = ["uv_build>=0.13.7,<0.14.0"]
@@ -22,6 +31,20 @@ module-name = "knowledge_platform"
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
+    "mypy>=2.4.1",
     "pytest>=9.2.0",
     "reportlab>=5.1.0",
+    "ruff>=0.17.6",
 ]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+ignore = ["B008"]
+
+[tool.mypy]
+files = ["src"]
+python_version = "3.12"
+warn_unused_ignores = true

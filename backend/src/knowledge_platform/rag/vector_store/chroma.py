@@ -1,9 +1,11 @@
 from pathlib import Path
+from typing import Any, cast
 
 import chromadb
 from chromadb.api import ClientAPI
 from chromadb.errors import NotFoundError
 
+from knowledge_platform.exceptions import ServiceUnavailableError
 from knowledge_platform.rag.schemas import DocumentChunk, SearchResult
 from knowledge_platform.rag.vector_store.base import VectorStore
 
@@ -32,7 +34,7 @@ class ChromaVectorStore(VectorStore):
         target = self.client.get_or_create_collection(name=collection)
         target.upsert(
             ids=[chunk.chunk_id for chunk in chunks],
-            embeddings=[list(vector) for vector in vectors],
+            embeddings=cast(Any, [list(vector) for vector in vectors]),
             documents=[chunk.content for chunk in chunks],
             metadatas=[self._metadata(chunk) for chunk in chunks],
         )
@@ -50,17 +52,21 @@ class ChromaVectorStore(VectorStore):
             return []
 
         result = target.query(
-            query_embeddings=[list(vector)],
+            query_embeddings=cast(Any, [list(vector)]),
             n_results=top_k,
-            where=where,
+            where=cast(Any, where),
             include=["documents", "metadatas", "distances"],
         )
+        ids = result["ids"] or []
+        documents = result["documents"] or []
+        metadatas = result["metadatas"] or []
+        distances = result["distances"] or []
         return [
             SearchResult(
                 chunk_id=chunk_id,
                 document_id=str(metadata["document_id"]),
                 content=content,
-                page_number=int(metadata["page_number"]),
+                page_number=int(str(metadata["page_number"])),
                 distance=float(distance),
                 metadata={
                     key: str(value)
@@ -69,10 +75,7 @@ class ChromaVectorStore(VectorStore):
                 },
             )
             for chunk_id, content, metadata, distance in zip(
-                result["ids"][0],
-                result["documents"][0],
-                result["metadatas"][0],
-                result["distances"][0],
+                ids[0], documents[0], metadatas[0], distances[0]
             )
         ]
 
@@ -81,7 +84,15 @@ class ChromaVectorStore(VectorStore):
             target = self.client.get_collection(name=collection)
         except NotFoundError:
             return
-        target.delete(where=where)
+        target.delete(where=cast(Any, where))
+
+    def check_ready(self) -> None:
+        try:
+            self.client.list_collections()
+        except Exception as error:
+            raise ServiceUnavailableError(
+                f"Chroma is unavailable: {error}"
+            ) from error
 
     @staticmethod
     def _metadata(chunk: DocumentChunk) -> dict[str, str | int]:

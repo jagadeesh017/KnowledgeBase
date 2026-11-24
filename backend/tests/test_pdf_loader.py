@@ -1,5 +1,6 @@
 import pytest
 
+from knowledge_platform.exceptions import DocumentParseError
 from knowledge_platform.rag.loaders import PDFLoader
 
 
@@ -38,3 +39,13 @@ def test_document_metadata_is_preserved(make_pdf) -> None:
 def test_missing_file_raises() -> None:
     with pytest.raises(FileNotFoundError):
         PDFLoader().load("does_not_exist.pdf", document_id="doc_004")
+
+
+def test_empty_bytes_raise_document_parse_error() -> None:
+    with pytest.raises(DocumentParseError):
+        PDFLoader().load_bytes(b"", document_id="doc_005")
+
+
+def test_invalid_bytes_raise_document_parse_error() -> None:
+    with pytest.raises(DocumentParseError):
+        PDFLoader().load_bytes(b"not a pdf", document_id="doc_006")

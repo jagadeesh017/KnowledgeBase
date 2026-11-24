@@ -2,6 +2,7 @@ from collections.abc import Sequence
 
 import pytest
 
+from knowledge_platform.exceptions import ServiceUnavailableError
 from knowledge_platform.rag.embeddings import EmbeddingProvider, OllamaEmbeddings
 
 
@@ -45,6 +46,47 @@ def test_embed_one_returns_single_vector() -> None:
     assert OllamaEmbeddings(client=client).embed_one("hello") == [0.5, 0.6]
 
 
+class FlakyClient(FakeClient):
+    def __init__(self, vectors: list[list[float]], failures: int) -> None:
+        super().__init__(vectors)
+        self.failures = failures
+        self.attempts = 0
+
+    def embed(
+        self, *, model: str, input: Sequence[str]
+    ) -> dict[str, list[list[float]]]:
+        self.attempts += 1
+        if self.attempts <= self.failures:
+            raise ConnectionError("ollama down")
+        return super().embed(model=model, input=input)
+
+
 def test_provider_interface_is_abstract() -> None:
     with pytest.raises(TypeError):
         EmbeddingProvider()
+
+
+def test_embed_retries_connection_errors() -> None:
+    client = FlakyClient([[0.1]], failures=1)
+
+    vectors = OllamaEmbeddings(
+        client=client,
+        retries=2,
+        backoff_seconds=0,
+    ).embed(["a"])
+
+    assert vectors == [[0.1]]
+    assert client.attempts == 2
+
+
+def test_embed_maps_exhausted_retries_to_service_unavailable() -> None:
+    client = FlakyClient([[0.1]], failures=2)
+
+    with pytest.raises(ServiceUnavailableError):
+        OllamaEmbeddings(
+            client=client,
+            retries=2,
+            backoff_seconds=0,
+        ).embed(["a"])
+
+    assert client.attempts == 2

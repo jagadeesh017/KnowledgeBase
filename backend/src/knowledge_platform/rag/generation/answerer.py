@@ -9,8 +9,13 @@ class RAGAnswerer:
         self.retriever = retriever
         self.chat_model = chat_model
 
-    def answer(self, question: str, top_k: int = 5) -> RAGAnswer:
-        results = self.retriever.retrieve(question, top_k=top_k)
+    def answer(
+        self,
+        question: str,
+        top_k: int = 5,
+        where: dict[str, object] | None = None,
+    ) -> RAGAnswer:
+        results = self.retriever.retrieve(question, top_k=top_k, where=where)
         context = build_context(results)
         reply = self.chat_model.chat(
             [

@@ -8,3 +8,6 @@ class EmbeddingProvider(ABC):
 
     def embed_one(self, text: str) -> list[float]:
         return self.embed([text])[0]
+
+    def check_ready(self) -> None:
+        return None

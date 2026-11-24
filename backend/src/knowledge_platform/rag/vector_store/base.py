@@ -26,3 +26,6 @@ class VectorStore(ABC):
     @abstractmethod
     def delete(self, collection: str, where: dict[str, object]) -> None:
         """Remove every entry matching `where` from the collection."""
+
+    def check_ready(self) -> None:
+        return None
